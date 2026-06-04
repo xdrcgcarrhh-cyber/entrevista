@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Entrevista Laboral | XDR CG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root{--bg:#08090a;--bg-card:#111214;--bg-elevated:#191b1e;--fg:#eaeaec;--fg-muted:#6e7379;--accent:#00c896;--accent-hover:#00e6ab;--accent-glow:rgba(0,200,150,0.12);--accent-dim:#009e78;--border:#22252a;--danger:#ff4757;--warning:#ffb142}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden}
+        .font-display{font-family:'Playfair Display',serif}
+        .font-tech{font-family:'Orbitron',sans-serif}
+
+        .bg-atmosphere{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+        .bg-atmosphere::before{content:'';position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(0,200,150,0.08),transparent 65%);top:-250px;right:-200px;animation:drift 18s ease-in-out infinite alternate}
+        .bg-atmosphere::after{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(0,160,120,0.06),transparent 65%);bottom:-200px;left:-150px;animation:drift 14s ease-in-out infinite alternate-reverse}
+        @keyframes drift{0%{transform:translate(0,0) scale(1)}100%{transform:translate(60px,40px) scale(1.1)}}
+        .bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px}
+        
+        .screen{display:none;position:relative;z-index:1}.screen.active{display:flex}
+        
+        .input-field{width:100%;padding:13px 16px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--fg);font-size:15px;font-family:'DM Sans',sans-serif;transition:all .3s;outline:none}
+        .input-field:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+        .input-field::placeholder{color:var(--fg-muted);opacity:.5}
+        textarea.input-field{resize:vertical;min-height:90px}
+        select.input-field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%236e7379' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer}
+        select.input-field option{background:var(--bg-card);color:var(--fg)}
+        
+        .btn{padding:13px 28px;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .3s;display:inline-flex;align-items:center;gap:8px}
+        .btn-primary{background:var(--accent);color:var(--bg)}.btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,200,150,0.25)}
+        .btn-secondary{background:transparent;color:var(--fg);border:1.5px solid var(--border)}.btn-secondary:hover{border-color:var(--fg-muted);background:rgba(255,255,255,0.02)}
+        .btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+        .btn-sm{padding:10px 18px;font-size:13px}
+        
+        .card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px}
+        .field-label{display:block;font-size:13px;font-weight:600;color:var(--fg-muted);margin-bottom:6px;letter-spacing:.03em;text-transform:uppercase}
+        .field-group{margin-bottom:20px}.field-group:last-child{margin-bottom:0}
+        
+        .radio-card{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .25s}
+        .radio-card:hover{border-color:var(--fg-muted)}.radio-card.selected{border-color:var(--accent);background:var(--accent-glow)}
+        .radio-dot{width:18px;height:18px;border:2px solid var(--fg-muted);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .25s;flex-shrink:0}
+        .radio-card.selected .radio-dot{border-color:var(--accent)}
+        .radio-dot::after{content:'';width:9px;height:9px;border-radius:50%;background:var(--accent);transform:scale(0);transition:transform .25s}
+        .radio-card.selected .radio-dot::after{transform:scale(1)}
+        
+        .progress-bar{width:100%;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+        .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent-dim),var(--accent));border-radius:3px;transition:width .5s ease}
+        .stepper{display:flex;gap:6px;align-items:center;justify-content:center}
+        .step-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:all .4s}.step-dot.active{background:var(--accent);box-shadow:0 0 10px rgba(0,200,150,0.5);transform:scale(1.3)}.step-dot.done{background:var(--accent-dim)}
+        .step-line{width:30px;height:2px;background:var(--border);transition:background .4s}.step-line.done{background:var(--accent-dim)}
+        
+        .toast-box{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+        .toast{padding:12px 18px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;color:var(--fg);font-size:14px;display:flex;align-items:center;gap:10px;animation:slideIn .35s ease,fadeAway .35s ease 3.5s forwards;box-shadow:0 8px 30px rgba(0,0,0,.5);max-width:340px}
+        .toast.error{border-left:3px solid var(--danger)}.toast.success{border-left:3px solid var(--accent)}.toast.warning{border-left:3px solid var(--warning)}
+        @keyframes slideIn{from{transform:translateX(80px);opacity:0}to{transform:translateX(0);opacity:1}}
+        @keyframes fadeAway{from{opacity:1}to{opacity:0;transform:translateX(30px)}}
+        
+        .fade-up{animation:fadeUp .5s ease both}@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+        .loader{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .timer-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;background:var(--accent-glow);border:1px solid rgba(0,200,150,0.15);border-radius:16px;font-size:12px;font-weight:700;color:var(--accent)}
+        ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+        @media(max-width:768px){.card{padding:20px;border-radius:12px}}
+
+        .photo-zone{width:200px;height:200px;border-radius:50%;border:3px dashed var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;transition:all .3s;background:var(--bg);margin:0 auto}
+        .photo-zone:hover{border-color:var(--fg-muted)}
+        .photo-zone.has-photo{border-style:solid;border-color:var(--accent)}
+        .photo-zone img{width:100%;height:100%;object-fit:cover}
+        .photo-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(8,9,10,0.6);opacity:0;transition:opacity .3s;border-radius:50%}
+        .photo-zone:hover .photo-overlay{opacity:1}
+        .camera-preview{position:relative;border-radius:16px;overflow:hidden;background:#000;width:100%;max-width:400px;aspect-ratio:4/3;margin:0 auto}
+        .camera-preview video{width:100%;height:100%;object-fit:cover}
+        .camera-btn-capture{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);width:60px;height:60px;border-radius:50%;background:var(--accent);border:4px solid #fff;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+        .camera-btn-capture:hover{transform:translateX(-50%) scale(1.1)}
+        .camera-btn-capture::after{content:'';width:44px;height:44px;border-radius:50%;background:#fff}
+        
+        .cond-fields{max-height:0;overflow:hidden;transition:max-height .4s ease,opacity .3s ease,margin .3s ease;opacity:0;margin-top:0}
+        .cond-fields.visible{max-height:300px;opacity:1;margin-top:12px}
+
+        #scrSplash{flex-direction:column;justify-content:space-between;align-items:center;background:var(--bg)}
+        .splash-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(0,200,150,0.15),transparent 70%);filter:blur(40px);animation:pulseGlow 3s ease-in-out infinite alternate}
+        @keyframes pulseGlow{0%{opacity:.6;transform:translate(-50%,-50%) scale(1)}100%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}}
+        .splash-title{letter-spacing:0.1em;animation:fadeInTitle 1.5s ease both}
+        @keyframes fadeInTitle{from{opacity:0;transform:translateY(20px);filter:blur(8px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+        .splash-sub{animation:fadeInTitle 1.5s ease .5s both}
+        .splash-bar-track{width:200px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:16px;animation:fadeInTitle 1.5s ease .8s both}
+        .splash-bar-fill{width:0%;height:100%;background:var(--accent);border-radius:2px;animation:loadBar 3s ease-in-out forwards}
+        @keyframes loadBar{0%{width:0%}100%{width:100%}}
+        .splash-footer{width:100%;display:flex;justify-content:space-between;padding:24px 32px;animation:fadeInTitle 1.5s ease 1s both}
+    </style>
+</head>
+<body>
+<div class="bg-atmosphere"></div>
+<div class="bg-grid"></div>
+<div class="toast-box" id="toastBox"></div>
+<input type="file" id="cameraInput" accept="image/*" capture="user" style="display:none">
+<input type="file" id="fileInput" accept="image/*" style="display:none">
+
+<!-- ============ SPLASH ============ -->
+<div id="scrSplash" class="screen active min-h-screen">
+    <div class="splash-glow"></div>
+    <div class="flex-1"></div>
+    <div class="text-center relative z-10">
+        <div class="splash-title mb-3">
+            <i class="fa-solid fa-gamepad text-4xl md:text-5xl mb-4" style="color:var(--accent);filter:drop-shadow(0 0 15px rgba(0,200,150,0.6))"></i>
+        </div>
+        <h1 class="font-tech text-2xl md:text-4xl font-bold splash-title" style="color:var(--fg);line-height:1.3">
+            XDR CG<br><span style="color:var(--accent)">Zona Gamer</span> & Ciber Cafe
+        </h1>
+        <p class="text-sm md:text-base mt-4 splash-sub" style="color:var(--fg-muted);letter-spacing:0.15em;text-transform:uppercase">
+            Cargando sistema de entrevistas
+        </p>
+        <div class="splash-bar-track mx-auto"><div class="splash-bar-fill"></div></div>
+    </div>
+    <div class="flex-1"></div>
+    <div class="splash-footer">
+        <span class="text-xs md:text-sm font-semibold" style="color:var(--fg-muted);letter-spacing:0.05em">
+            <i class="fa-solid fa-lock mr-1" style="color:var(--accent)"></i> Encrypted by Kosmos AI
+        </span>
+        <span class="text-xs md:text-sm font-semibold" style="color:var(--fg-muted);letter-spacing:0.05em">
+            Programado por XDR C.G <i class="fa-solid fa-code ml-1" style="color:var(--accent)"></i>
+        </span>
+    </div>
+</div>
+
+<!-- ============ LOGIN ============ -->
+<div id="scrLogin" class="screen items-center justify-center min-h-screen px-4">
+    <div class="w-full max-w-md text-center">
+        <div class="fade-up mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-xl mb-5" style="background:var(--accent-glow);border:1px solid rgba(0,200,150,0.2)">
+                <i class="fa-solid fa-briefcase text-2xl" style="color:var(--accent)"></i>
+            </div>
+            <h1 class="font-display text-4xl md:text-5xl font-black mb-3" style="line-height:1.1">Pre-Entrevista<br><span style="color:var(--accent)">Laboral</span></h1>
+            <p style="color:var(--fg-muted);font-size:15px;line-height:1.6">Ingresa tus datos para comenzar el proceso de seleccion en linea</p>
+        </div>
+        <div class="card fade-up" style="animation-delay:.12s">
+            <div class="field-group">
+                <label class="field-label"><i class="fa-solid fa-id-card mr-1"></i> Cedula</label>
+                <input type="text" id="inpCedula" class="input-field text-center" placeholder="Ej: 402-1234567-8" maxlength="20" autocomplete="off">
+            </div>
+            <div class="field-group">
+                <label class="field-label"><i class="fa-solid fa-user mr-1"></i> Nombre Completo</label>
+                <input type="text" id="inpNombre" class="input-field text-center" placeholder="Tu nombre completo" autocomplete="off">
+            </div>
+            <button class="btn btn-primary w-full mt-2" onclick="iniciarEntrevista()">Comenzar <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <p class="mt-5 fade-up" style="color:var(--fg-muted);font-size:12px;animation-delay:.25s">
+            <i class="fa-solid fa-shield-halved mr-1"></i> Tus datos son confidenciales
+        </p>
+    </div>
+</div>
+
+<!-- ============ FOTO ============ -->
+<div id="scrFoto" class="screen items-center justify-center min-h-screen px-4">
+    <div class="w-full max-w-md text-center">
+        <div class="fade-up mb-6">
+            <h2 class="text-2xl font-bold mb-2">Tu Foto</h2>
+            <p style="color:var(--fg-muted);font-size:14px;line-height:1.5">Toma una foto o sube una imagen para tu expediente de entrevista</p>
+        </div>
+        <div id="fotoIdle" class="fade-up" style="animation-delay:.1s">
+            <div class="photo-zone mb-6" id="photoZone" onclick="document.getElementById('cameraInput').click()">
+                <div id="photoPlaceholder" class="text-center"><i class="fa-solid fa-camera text-3xl mb-2" style="color:var(--fg-muted)"></i><p class="text-xs" style="color:var(--fg-muted)">Toca para tomar foto</p></div>
+                <img id="photoPreview" style="display:none" alt="Foto preview">
+                <div class="photo-overlay"><i class="fa-solid fa-camera-retro text-2xl" style="color:#fff"></i></div>
+            </div>
+            <div class="flex gap-3 justify-center mb-6">
+                <button class="btn btn-primary btn-sm" onclick="abrirCamara()"><i class="fa-solid fa-camera"></i> Tomar Foto</button>
+                <button class="btn btn-secondary btn-sm" onclick="subirArchivo()"><i class="fa-solid fa-upload"></i> Subir Imagen</button>
+            </div>
+            <div id="fotoActions" style="display:none" class="flex gap-3 justify-center mb-4">
+                <button class="btn btn-secondary btn-sm" onclick="retomarFoto()"><i class="fa-solid fa-rotate-left"></i> Tomar de nuevo</button>
+            </div>
+        </div>
+        <div id="fotoCamera" style="display:none" class="fade-up">
+            <div class="camera-preview mb-4"><video id="cameraVideo" autoplay playsinline muted></video><div class="camera-btn-capture" onclick="capturarFoto()"></div></div>
+            <button class="btn btn-secondary btn-sm" onclick="cerrarCamara()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+        </div>
+        <canvas id="photoCanvas" style="display:none"></canvas>
+        <div class="flex gap-3 justify-center mt-2">
+            <button class="btn btn-secondary" onclick="saltarFoto()">Saltar <i class="fa-solid fa-forward"></i></button>
+            <button class="btn btn-primary" id="btnFotoContinuar" onclick="continuarConFoto()" disabled>Continuar <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+    </div>
+</div>
+
+<!-- ============ ENTREVISTA ============ -->
+<div id="scrEntrevista" class="screen flex-col min-h-screen">
+    <header class="sticky top-0 z-50 px-4 py-3" style="background:rgba(8,9,10,0.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)">
+        <div class="max-w-2xl mx-auto">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-full overflow-hidden flex-shrink-0" style="border:2px solid var(--accent)">
+                        <img id="hdrFoto" src="" style="width:100%;height:100%;object-fit:cover;display:none" alt="">
+                        <div id="hdrFotoPlaceholder" class="w-full h-full flex items-center justify-center" style="background:var(--accent-glow)"><i class="fa-solid fa-user text-xs" style="color:var(--accent)"></i></div>
+                    </div>
+                    <span id="hdrNombre" class="font-semibold text-sm"></span>
+                    <span class="text-xs px-2 py-0.5 rounded-full" style="background:var(--accent-glow);color:var(--accent);font-weight:600" id="hdrCedula"></span>
+                </div>
+                <div class="timer-pill"><i class="fa-solid fa-clock"></i><span id="timerTxt">00:00</span></div>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+                <div class="progress-bar flex-1"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+                <span id="progLabel" class="text-xs font-semibold" style="color:var(--fg-muted)">0%</span>
+            </div>
+            <div class="stepper" id="stepperBar"></div>
+        </div>
+    </header>
+    <main class="flex-1 px-4 py-6"><div class="max-w-2xl mx-auto" id="entrevistaContenido"></div></main>
+    <footer class="sticky bottom-0 z-50 px-4 py-3" style="background:rgba(8,9,10,0.92);backdrop-filter:blur(14px);border-top:1px solid var(--border)">
+        <div class="max-w-2xl mx-auto flex items-center justify-between">
+            <button id="btnPrev" class="btn btn-secondary" onclick="pasoAnterior()" style="display:none"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
+            <div class="flex-1"></div>
+            <button id="btnNext" class="btn btn-primary" onclick="siguientePaso()">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+    </footer>
+</div>
+
+<!-- ============ ENVIANDO ============ -->
+<div id="scrEnviando" class="screen items-center justify-center min-h-screen px-4">
+    <div class="text-center">
+        <div class="loader mx-auto mb-5"></div>
+        <h2 class="text-lg font-bold mb-1">Guardando entrevista...</h2>
+        <p style="color:var(--fg-muted);font-size:14px">Por favor espera un momento</p>
+    </div>
+</div>
+
+<!-- ============ GRACIAS ============ -->
+<div id="scrGracias" class="screen items-center justify-center min-h-screen px-4">
+    <div class="w-full max-w-md text-center">
+        <div class="fade-up">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-5" style="background:var(--accent-glow);border:2px solid rgba(0,200,150,0.25)">
+                <i class="fa-solid fa-check text-3xl" style="color:var(--accent)"></i>
+            </div>
+            <h1 class="font-display text-4xl font-black mb-3">Entrevista Enviada</h1>
+            <p style="color:var(--fg-muted);font-size:15px;line-height:1.6" class="mb-6">Tu pre-entrevista ha sido registrada. Un reclutador la revisara y te contactara para la videollamada de seguimiento.</p>
+        </div>
+        <div class="card fade-up text-left mb-4" style="animation-delay:.12s">
+            <div class="flex items-center gap-3 mb-3">
+                <i class="fa-solid fa-video text-lg" style="color:var(--accent)"></i>
+                <div><div class="font-bold text-sm">Proxima etapa: Videollamada</div><div class="text-xs" style="color:var(--fg-muted)">Evaluacion de comportamiento y gestos</div></div>
+            </div>
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-envelope text-lg" style="color:var(--accent)"></i>
+                <div><div class="font-bold text-sm">Te contactaremos</div><div class="text-xs" style="color:var(--fg-muted)">Por telefono o correo electronico</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK — REALTIME DATABASE -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+// ============================================================
+//  CONFIGURACION FIREBASE REALTIME DATABASE
+// ============================================================
+const firebaseConfig = {
+    apiKey: "TU_API_KEY",
+    authDomain: "xdrcgca-rrhh.firebaseapp.com",
+    databaseURL: "https://xdrcgca-rrhh-default-rtdb.firebaseio.com",
+    projectId: "xdrcgca-rrhh",
+    storageBucket: "xdrcgca-rrhh.appspot.com",
+    messagingSenderId: "TU_SENDER_ID",
+    appId: "TU_APP_ID"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ============================================================
+//  ESTADO
+// ============================================================
+let estado = {
+    cedula:'', nombre:'', paso:0, totalPasos:5,
+    timer:null, segundos:0, respuestas:{}, fotoBase64:null,
+    cameraStream:null
+};
+
+// ============================================================
+//  SPLASH
+// ============================================================
+setTimeout(() => { cambiarPantalla('scrLogin'); }, 3200);
+
+// ============================================================
+//  SECCIONES
+// ============================================================
+const secciones = [
+    {
+        titulo: 'Datos Personales', icono: 'fa-user', desc: 'Informacion basica del candidato',
+        preguntas: [
+            { id:'fecha_nac', tipo:'text', etiqueta:'Fecha de Nacimiento', ph:'DD/MM/AAAA' },
+            { id:'localidad', tipo:'text', etiqueta:'Localidad', ph:'Ciudad, municipio o provincia' },
+            { id:'direccion', tipo:'text', etiqueta:'Direccion Completa', ph:'Calle, numero, sector, urbanizacion' },
+            { id:'telefono', tipo:'text', etiqueta:'Telefono de Contacto', ph:'(809) 000-0000' },
+            { id:'email_cand', tipo:'text', etiqueta:'Correo Electronico', ph:'tu@email.com' },
+            { id:'estado_civil', tipo:'select', etiqueta:'Estado Civil', ops:['Soltero/a','Casado/a','Union Libre','Divorciado/a','Viudo/a'] },
+            { id:'hijos', tipo:'radio', etiqueta:'Tienes hijos?', ops:['Si','No'],
+              condShow: { showOn: 'Si', fields: [{ id:'hijos_cantidad', tipo:'text', etiqueta:'Cantidad de hijos', ph:'Numero de hijos' }] }
+            }
+        ]
+    },
+    {
+        titulo: 'Formacion Academica', icono: 'fa-graduation-cap', desc: 'Nivel educativo y certificaciones',
+        preguntas: [
+            { id:'nivel_edu', tipo:'radio', etiqueta:'Nivel Educativo Maximo', ops:['Primaria','Secundaria/Bachillerato','Tecnico Superior','Universitario (Grado)','Posgrado/Maestria','Doctorado'] },
+            { id:'titulo', tipo:'text', etiqueta:'Titulo o Carrera', ph:'Licenciatura en...' },
+            { id:'institucion', tipo:'text', etiqueta:'Institucion Educativa', ph:'Nombre de la universidad o instituto' },
+            { id:'graduacion', tipo:'text', etiqueta:'Ano de Graduacion', ph:'Ej: 2022' },
+            { id:'certificaciones', tipo:'textarea', etiqueta:'Certificaciones o Cursos Adicionales', ph:'Lista tus certificaciones relevantes...' },
+            { id:'estudia_actual', tipo:'radio', etiqueta:'Estudia actualmente?', ops:['Si','No'],
+              condShow: { showOn: 'Si', fields: [
+                  { id:'estudia_dias', tipo:'text', etiqueta:'Que dias estudias?', ph:'Ej: Lunes a Viernes, Sabados, etc.' },
+                  { id:'estudia_horario', tipo:'text', etiqueta:'De que hora a que hora?', ph:'Ej: 6:00 PM a 9:00 PM' }
+              ]}
+            }
+        ]
+    },
+    {
+        titulo: 'Experiencia Laboral', icono: 'fa-briefcase', desc: 'Trayectoria profesional',
+        preguntas: [
+            { id:'experiencia_anios', tipo:'radio', etiqueta:'Anos de Experiencia', ops:['Sin experiencia','1-2 anos','3-5 anos','6-10 anos','Mas de 10 anos'] },
+            { id:'empresa_actual', tipo:'text', etiqueta:'Empresa Actual (o ultima)', ph:'Nombre de la empresa' },
+            { id:'cargo_actual', tipo:'text', etiqueta:'Cargo Actual (o ultimo)', ph:'Tu posicion o cargo' },
+            { id:'funciones', tipo:'textarea', etiqueta:'Principales Funciones Realizadas', ph:'Describe tus responsabilidades principales...' },
+            { id:'motivo_salida', tipo:'text', etiqueta:'Motivo de Salida (si aplica)', ph:'Razon por la que buscas nuevo empleo' }
+        ]
+    },
+    {
+        titulo: 'Competencias y Habilidades', icono: 'fa-star', desc: 'Evaluacion de aptitudes',
+        preguntas: [
+            { id:'idiomas', tipo:'text', etiqueta:'Idiomas que Dominas', ph:'Ej: Espanol nativo, Ingles intermedio' },
+            { id:'habilidades_tec', tipo:'textarea', etiqueta:'Habilidades Tecnicas', ph:'Software, herramientas, tecnologias que dominas...' },
+            { id:'habilidades_blandas', tipo:'textarea', etiqueta:'Habilidades Blandas', ph:'Trabajo en equipo, liderazgo, comunicacion...' },
+            { id:'nivel_office', tipo:'radio', etiqueta:'Nivel manejo de Microsoft Office', ops:['Basico','Intermedio','Avanzado'] }
+        ]
+    },
+    {
+        titulo: 'Disponibilidad y Expectativas', icono: 'fa-calendar-check', desc: 'Logistica y motivacion',
+        preguntas: [
+            { id:'cargo_aspirado', tipo:'text', etiqueta:'Cargo al que Aspiras', ph:'Posicion deseada' },
+            { id:'disponibilidad', tipo:'radio', etiqueta:'Disponibilidad para Iniciar', ops:['Inmediata','1 semana','2 semanas','1 mes','Mas de 1 mes'] },
+            { id:'motivacion', tipo:'textarea', etiqueta:'Por que deseas trabajar con nosotros?', ph:'Cuentanos tu motivacion...' }
+        ]
+    }
+];
+
+// ============================================================
+//  UTILIDADES
+// ============================================================
+function cambiarPantalla(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function toast(msg,tipo='success'){const box=document.getElementById('toastBox');const iconos={success:'fa-check-circle',error:'fa-exclamation-circle',warning:'fa-exclamation-triangle'};const colores={success:'var(--accent)',error:'var(--danger)',warning:'var(--warning)'};const t=document.createElement('div');t.className=`toast ${tipo}`;t.innerHTML=`<i class="fa-solid ${iconos[tipo]}" style="color:${colores[tipo]}"></i><span>${msg}</span>`;box.appendChild(t);setTimeout(()=>t.remove(),4200)}
+function formatFecha(){const d=new Date();return d.toLocaleDateString('es-DO',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+
+// ============================================================
+//  LOGIN
+// ============================================================
+function iniciarEntrevista(){
+    const cedula=document.getElementById('inpCedula').value.trim();
+    const nombre=document.getElementById('inpNombre').value.trim();
+    if(!cedula){toast('Ingresa tu numero de cedula','error');return}
+    if(!nombre){toast('Ingresa tu nombre completo','error');return}
+    estado.cedula=cedula;estado.nombre=nombre;
+    cambiarPantalla('scrFoto');
+}
+
+// ============================================================
+//  FOTO
+// ============================================================
+document.getElementById('cameraInput').addEventListener('change',function(e){if(e.target.files&&e.target.files[0])procesarArchivoFoto(e.target.files[0])});
+document.getElementById('fileInput').addEventListener('change',function(e){if(e.target.files&&e.target.files[0])procesarArchivoFoto(e.target.files[0])});
+function abrirCamara(){if(/Mobi|Android|iPhone/i.test(navigator.userAgent)){document.getElementById('cameraInput').click()}else{intentarCamaraViva()}}
+function intentarCamaraViva(){if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:false}).then(stream=>{estado.cameraStream=stream;const video=document.getElementById('cameraVideo');video.srcObject=stream;document.getElementById('fotoIdle').style.display='none';document.getElementById('fotoCamera').style.display=''}).catch(()=>{document.getElementById('cameraInput').click()});}else{document.getElementById('cameraInput').click()}}
+function capturarFoto(){const video=document.getElementById('cameraVideo');const canvas=document.getElementById('photoCanvas');canvas.width=video.videoWidth||640;canvas.height=video.videoHeight||480;canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);comprimirYMostrar(canvas);cerrarCamara()}
+function cerrarCamara(){if(estado.cameraStream){estado.cameraStream.getTracks().forEach(t=>t.stop());estado.cameraStream=null}document.getElementById('fotoCamera').style.display='none';document.getElementById('fotoIdle').style.display=''}
+function subirArchivo(){document.getElementById('fileInput').click()}
+function procesarArchivoFoto(file){const reader=new FileReader();reader.onload=function(e){const img=new Image();img.onload=function(){const canvas=document.getElementById('photoCanvas');canvas.width=img.width;canvas.height=img.height;canvas.getContext('2d').drawImage(img,0,0);comprimirYMostrar(canvas)};img.src=e.target.result};reader.readAsDataURL(file)}
+function comprimirYMostrar(canvas){const MAX=400;let w=canvas.width,h=canvas.height;if(w>MAX){h=h*MAX/w;w=MAX}if(h>MAX){w=w*MAX/h;h=MAX}w=Math.round(w);h=Math.round(h);const c2=document.createElement('canvas');c2.width=w;c2.height=h;c2.getContext('2d').drawImage(canvas,0,0,w,h);estado.fotoBase64=c2.toDataURL('image/jpeg',0.65);document.getElementById('photoPreview').src=estado.fotoBase64;document.getElementById('photoPreview').style.display='';document.getElementById('photoPlaceholder').style.display='none';document.getElementById('photoZone').classList.add('has-photo');document.getElementById('fotoActions').style.display='';document.getElementById('btnFotoContinuar').disabled=false}
+function retomarFoto(){estado.fotoBase64=null;document.getElementById('photoPreview').style.display='none';document.getElementById('photoPlaceholder').style.display='';document.getElementById('photoZone').classList.remove('has-photo');document.getElementById('fotoActions').style.display='none';document.getElementById('btnFotoContinuar').disabled=true;document.getElementById('cameraInput').value='';document.getElementById('fileInput').value=''}
+function saltarFoto(){estado.fotoBase64=null;irAEntrevista()}
+function continuarConFoto(){if(!estado.fotoBase64){toast('Toma o sube una foto primero','warning');return}irAEntrevista()}
+function irAEntrevista(){document.getElementById('hdrNombre').textContent=estado.nombre;document.getElementById('hdrCedula').textContent=estado.cedula;if(estado.fotoBase64){document.getElementById('hdrFoto').src=estado.fotoBase64;document.getElementById('hdrFoto').style.display='';document.getElementById('hdrFotoPlaceholder').style.display='none'}estado.paso=0;cambiarPantalla('scrEntrevista');renderPaso();iniciarTimer()}
+
+// ============================================================
+//  TIMER
+// ============================================================
+function iniciarTimer(){estado.segundos=0;clearInterval(estado.timer);estado.timer=setInterval(()=>{estado.segundos++;const m=String(Math.floor(estado.segundos/60)).padStart(2,'0');const s=String(estado.segundos%60).padStart(2,'0');document.getElementById('timerTxt').textContent=`${m}:${s}`},1000)}
+
+// ============================================================
+//  RENDER PASO
+// ============================================================
+function renderPaso(){
+    const sec=secciones[estado.paso];const cont=document.getElementById('entrevistaContenido');
+    let stHTML='';for(let i=0;i<estado.totalPasos;i++){const cls=i<estado.paso?'done':i===estado.paso?'active':'';stHTML+=`<div class="step-dot ${cls}"></div>`;if(i<estado.totalPasos-1)stHTML+=`<div class="step-line ${i<estado.paso?'done':''}"></div>`}
+    document.getElementById('stepperBar').innerHTML=stHTML;
+    const pct=Math.round((estado.paso/estado.totalPasos)*100);document.getElementById('progFill').style.width=pct+'%';document.getElementById('progLabel').textContent=pct+'%';
+    document.getElementById('btnPrev').style.display=estado.paso>0?'':'none';
+    document.getElementById('btnNext').innerHTML=estado.paso===estado.totalPasos-1?'Finalizar Entrevista <i class="fa-solid fa-paper-plane"></i>':'Siguiente <i class="fa-solid fa-arrow-right"></i>';
+
+    let html=`<div class="fade-up"><div class="flex items-center gap-3 mb-1"><div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:var(--accent-glow);border:1px solid rgba(0,200,150,0.15)"><i class="fa-solid ${sec.icono}" style="color:var(--accent)"></i></div><div><h2 class="text-xl font-bold">${sec.titulo}</h2><p class="text-xs" style="color:var(--fg-muted)">${sec.desc} — Paso ${estado.paso+1} de ${estado.totalPasos}</p></div></div></div><div class="card mt-5 fade-up" style="animation-delay:.08s">`;
+    sec.preguntas.forEach(p=>{
+        const val=estado.respuestas[p.id]||'';
+        html+=`<div class="field-group"><label class="field-label">${p.etiqueta}</label>`;
+        if(p.tipo==='text')html+=`<input type="text" class="input-field" placeholder="${p.ph||''}" data-id="${p.id}" value="${val}">`;
+        else if(p.tipo==='textarea')html+=`<textarea class="input-field" placeholder="${p.ph||''}" data-id="${p.id}">${val}</textarea>`;
+        else if(p.tipo==='select'){html+=`<select class="input-field" data-id="${p.id}"><option value="">Selecciona una opcion</option>`;p.ops.forEach(o=>{html+=`<option value="${o}" ${val===o?'selected':''}>${o}</option>`});html+=`</select>`}
+        else if(p.tipo==='radio'){
+            html+=`<div class="flex flex-col gap-2" data-radio-group="${p.id}">`;
+            p.ops.forEach(o=>{html+=`<div class="radio-card ${val===o?'selected':''}" data-id="${p.id}" data-val="${o}" onclick="seleccionarRadio(this)"><div class="radio-dot"></div><span class="text-sm">${o}</span></div>`});
+            html+=`</div>`;
+            if(p.condShow){
+                const showCond=val===p.condShow.showOn;
+                html+=`<div class="cond-fields ${showCond?'visible':''}" id="cond_${p.id}">`;
+                p.condShow.fields.forEach(cf=>{const cfVal=estado.respuestas[cf.id]||'';html+=`<div class="field-group"><label class="field-label">${cf.etiqueta}</label>`;if(cf.tipo==='text')html+=`<input type="text" class="input-field" placeholder="${cf.ph||''}" data-id="${cf.id}" value="${cfVal}">`;else if(cf.tipo==='textarea')html+=`<textarea class="input-field" placeholder="${cf.ph||''}" data-id="${cf.id}">${cfVal}</textarea>`;html+=`</div>`});
+                html+=`</div>`;
+            }
+        }
+        html+=`</div>`;
+    });
+    html+=`</div>`;cont.innerHTML=html;
+}
+
+function seleccionarRadio(el){
+    const id=el.dataset.id;const val=el.dataset.val;
+    el.parentElement.querySelectorAll('.radio-card').forEach(c=>c.classList.remove('selected'));
+    el.classList.add('selected');estado.respuestas[id]=val;
+    const sec=secciones[estado.paso];const preg=sec.preguntas.find(p=>p.id===id);
+    if(preg&&preg.condShow){
+        const condDiv=document.getElementById(`cond_${id}`);
+        if(condDiv){if(val===preg.condShow.showOn){condDiv.classList.add('visible')}else{condDiv.classList.remove('visible');preg.condShow.fields.forEach(cf=>{estado.respuestas[cf.id]='';const cfEl=document.querySelector(`[data-id="${cf.id}"]`);if(cfEl)cfEl.value=''})}}
+    }
+}
+
+function guardarRespuestasPaso(){const sec=secciones[estado.paso];sec.preguntas.forEach(p=>{if(p.tipo==='radio')return;const el=document.querySelector(`[data-id="${p.id}"]`);if(el)estado.respuestas[p.id]=el.value;if(p.condShow){p.condShow.fields.forEach(cf=>{const cfEl=document.querySelector(`[data-id="${cf.id}"]`);if(cfEl)estado.respuestas[cf.id]=cfEl.value})}})}
+function pasoAnterior(){if(estado.paso<=0)return;guardarRespuestasPaso();estado.paso--;renderPaso();window.scrollTo({top:0,behavior:'smooth'})}
+function siguientePaso(){guardarRespuestasPaso();const sec=secciones[estado.paso];let alguna=false;sec.preguntas.forEach(p=>{if(estado.respuestas[p.id]&&estado.respuestas[p.id].trim())alguna=true});if(!alguna){toast('Responde al menos una pregunta','warning');return}if(estado.paso<estado.totalPasos-1){estado.paso++;renderPaso();window.scrollTo({top:0,behavior:'smooth'})}else{finalizarEntrevista()}}
+
+// ============================================================
+//  FINALIZAR — GUARDAR EN REALTIME DATABASE
+// ============================================================
+async function finalizarEntrevista(){
+    clearInterval(estado.timer);cambiarPantalla('scrEnviando');
+    const duracion=estado.segundos;const fecha=formatFecha();const ahora=new Date();
+    const data={
+        cedula:estado.cedula,nombre:estado.nombre,fecha:fecha,
+        timestamp:ahora.getTime(),duracion:duracion,estado:'completada',
+        videollamada:'pendiente',foto:estado.fotoBase64||'',
+        respuestas:{...estado.respuestas}
+    };
+    try{
+        // Guardar en Realtime Database usando la cédula como clave
+        await db.ref('entrevistas/' + estado.cedula).set(data);
+        await new Promise(r=>setTimeout(r,800));
+        cambiarPantalla('scrGracias');
+        toast('Entrevista registrada exitosamente','success');
+    }catch(err){
+        console.error('Error:',err);
+        await new Promise(r=>setTimeout(r,800));
+        cambiarPantalla('scrGracias');
+        toast('Error al guardar. Intenta de nuevo.','error');
+    }
+}
+</script>
+</body>
+</html>
