@@ -45,7 +45,7 @@
         .radio-card.selected .radio-dot{border-color:var(--accent)}
         .radio-dot::after{content:'';width:9px;height:9px;border-radius:50%;background:var(--accent);transform:scale(0);transition:transform .25s}
         .radio-card.selected .radio-dot::after{transform:scale(1)}
-
+        
         /* NUEVOS ESTILOS PARA CHECKBOX DE DÍAS */
         .checkbox-card{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .25s;user-select:none}
         .checkbox-card:hover{border-color:var(--fg-muted)}.checkbox-card.checked{border-color:var(--accent);background:var(--accent-glow)}
@@ -53,10 +53,9 @@
         .checkbox-card.checked .check-box{border-color:var(--accent);background:var(--accent)}
         .check-box::after{content:'✓';color:var(--bg);font-size:12px;font-weight:900;opacity:0;transition:opacity .2s}
         .checkbox-card.checked .check-box::after{opacity:1}
-        .dia-row{margin-bottom:12px}
         .dia-razon{max-height:0;overflow:hidden;transition:max-height .3s ease, opacity .3s ease, margin .3s ease;opacity:0;margin-top:0}
         .dia-razon.visible{max-height:80px;opacity:1;margin-top:8px}
-        
+
         .progress-bar{width:100%;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
         .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent-dim),var(--accent));border-radius:3px;transition:width .5s ease}
         .stepper{display:flex;gap:6px;align-items:center;justify-content:center}
@@ -88,8 +87,9 @@
         .camera-btn-capture:hover{transform:translateX(-50%) scale(1.1)}
         .camera-btn-capture::after{content:'';width:44px;height:44px;border-radius:50%;background:#fff}
         
-        .cond-fields{max-height:0;overflow:hidden;transition:max-height .4s ease,opacity .3s ease,margin .3s ease;opacity:0;margin-top:0}
-        .cond-fields.visible{max-height:800px;opacity:1;margin-top:12px}
+        /* MODIFICADO: Aumentado el max-height para que quepan los 7 días */
+        .cond-fields{max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .3s ease,margin .3s ease;opacity:0;margin-top:0}
+        .cond-fields.visible{max-height:1500px;opacity:1;margin-top:12px}
 
         #scrSplash{flex-direction:column;justify-content:space-between;align-items:center;background:var(--bg)}
         .splash-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(0,200,150,0.15),transparent 70%);filter:blur(40px);animation:pulseGlow 3s ease-in-out infinite alternate}
@@ -285,7 +285,7 @@ const db = firebase.database();
 //  ESTADO
 // ============================================================
 let estado = {
-    cedula:'', nombre:'', paso:0, totalPasos:6, // ACTUALIZADO: 6 pasos en vez de 5
+    cedula:'', nombre:'', paso:0, totalPasos:6, // ACTUALIZADO A 6
     timer:null, segundos:0, respuestas:{}, fotoBase64:null,
     cameraStream:null
 };
@@ -356,7 +356,7 @@ const secciones = [
             { id:'motivacion', tipo:'textarea', etiqueta:'Por que deseas trabajar con nosotros?', ph:'Cuentanos tu motivacion...' }
         ]
     },
-    // NUEVA SECCIÓN: DISPONIBILIDAD HORARIA
+    // NUEVA SECCIÓN AGREGADA
     {
         titulo: 'Disponibilidad Horaria', icono: 'fa-clock', desc: 'Dias de la semana disponibles para laborar',
         preguntas: [
@@ -433,14 +433,12 @@ function renderPaso(){
     document.getElementById('btnPrev').style.display=estado.paso>0?'':'none';
     document.getElementById('btnNext').innerHTML=estado.paso===estado.totalPasos-1?'Finalizar Entrevista <i class="fa-solid fa-paper-plane"></i>':'Siguiente <i class="fa-solid fa-arrow-right"></i>';
 
-    let html=`<div class="fade-up"><div class="flex items-center gap-3 mb-1"><div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:var(--accent-glow);border:1px solid rgba(0,200,150,0.15)"><i class="fa-solid ${sec.icono}" style="color:var(--accent)"></i></div><div><h2 class="text-xl font-bold">${sec.titulo}</h2><p class="text-xs" style="color:var(--fg-muted)">${sec.desc} — Paso ${estado.paso+1} de ${estado.totalPasos}</p></div></div></div><div class="card mt-5 fade-up" style="animation-delay:.08s">`;
-    
+    let html=`<div class="fade-up"><div class="flex items-center gap-3 mb-1"><div class="w-10 h-10 rounded-xl flex items-center justify-content" style="background:var(--accent-glow);border:1px solid rgba(0,200,150,0.15)"><i class="fa-solid ${sec.icono}" style="color:var(--accent)"></i></div><div><h2 class="text-xl font-bold">${sec.titulo}</h2><p class="text-xs" style="color:var(--fg-muted)">${sec.desc} — Paso ${estado.paso+1} de ${estado.totalPasos}</p></div></div></div><div class="card mt-5 fade-up" style="animation-delay:.08s">`;
     sec.preguntas.forEach(p=>{
         const val=estado.respuestas[p.id]||'';
         html+=`<div class="field-group"><label class="field-label">${p.etiqueta}</label>`;
-        
-        if(p.tipo==='text') html+=`<input type="text" class="input-field" placeholder="${p.ph||''}" data-id="${p.id}" value="${val}">`;
-        else if(p.tipo==='textarea') html+=`<textarea class="input-field" placeholder="${p.ph||''}" data-id="${p.id}">${val}</textarea>`;
+        if(p.tipo==='text')html+=`<input type="text" class="input-field" placeholder="${p.ph||''}" data-id="${p.id}" value="${val}">`;
+        else if(p.tipo==='textarea')html+=`<textarea class="input-field" placeholder="${p.ph||''}" data-id="${p.id}">${val}</textarea>`;
         else if(p.tipo==='select'){html+=`<select class="input-field" data-id="${p.id}"><option value="">Selecciona una opcion</option>`;p.ops.forEach(o=>{html+=`<option value="${o}" ${val===o?'selected':''}>${o}</option>`});html+=`</select>`}
         else if(p.tipo==='radio'){
             html+=`<div class="flex flex-col gap-2" data-radio-group="${p.id}">`;
@@ -451,24 +449,26 @@ function renderPaso(){
                 const showCond=val===p.condShow.showOn;
                 html+=`<div class="cond-fields ${showCond?'visible':''}" id="cond_${p.id}">`;
                 p.condShow.fields.forEach(cf=>{
-                    html+=`<div class="field-group"><label class="field-label">${cf.etiqueta}</label>`;
-                    
-                    if(cf.tipo==='text') html+=`<input type="text" class="input-field" placeholder="${cf.ph||''}" data-id="${cf.id}" value="${estado.respuestas[cf.id]||''}">`;
-                    else if(cf.tipo==='textarea') html+=`<textarea class="input-field" placeholder="${cf.ph||''}" data-id="${cf.id}">${estado.respuestas[cf.id]||''}</textarea>`;
-                    // NUEVO: Renderizado de días de la semana
-                    else if(cf.tipo==='dias_semana'){
+                    html+=`<div class="field-group" style="margin-top:10px"><label class="field-label">${cf.etiqueta}</label>`;
+                    if(cf.tipo==='text'){
+                        const cfVal=estado.respuestas[cf.id]||'';
+                        html+=`<input type="text" class="input-field" placeholder="${cf.ph||''}" data-id="${cf.id}" value="${cfVal}">`;
+                    } else if(cf.tipo==='textarea'){
+                        const cfVal=estado.respuestas[cf.id]||'';
+                        html+=`<textarea class="input-field" placeholder="${cf.ph||''}" data-id="${cf.id}">${cfVal}</textarea>`;
+                    } else if(cf.tipo==='dias_semana'){
                         const diasData = estado.respuestas[cf.id] || {};
                         cf.dias.forEach(dia => {
-                            const isChecked = diasData[dia] ? diasData[dia].check !== false : true; // Por defecto marcado (puede laborar)
+                            const isChecked = diasData[dia] ? diasData[dia].check !== false : true;
                             const razon = diasData[dia] ? diasData[dia].razon || '' : '';
                             html+=`
-                            <div class="dia-row">
+                            <div style="margin-bottom:12px">
                                 <div class="checkbox-card ${isChecked?'checked':''}" data-check-id="${cf.id}" data-dia="${dia}" onclick="toggleDia(this)">
                                     <div class="check-box"></div>
                                     <span class="text-sm font-semibold">${dia}</span>
                                 </div>
                                 <div class="dia-razon ${isChecked?'':'visible'}">
-                                    <input type="text" class="input-field" placeholder="Razon por la que NO puedes laborar este dia" data-razon-id="${cf.id}" data-dia="${dia}" value="${razon}">
+                                    <input type="text" class="input-field" placeholder="Razon por la que NO puedes laborar" data-razon-id="${cf.id}" data-dia="${dia}" value="${razon}">
                                 </div>
                             </div>`;
                         });
@@ -483,7 +483,7 @@ function renderPaso(){
     html+=`</div>`;cont.innerHTML=html;
 }
 
-// NUEVA FUNCIÓN: Toggle para los días de la semana
+// NUEVA FUNCION PARA TOGGLE DE DIAS
 function toggleDia(el){
     el.classList.toggle('checked');
     const isChecked = el.classList.contains('checked');
@@ -492,7 +492,7 @@ function toggleDia(el){
     if(isChecked){
         razonDiv.classList.remove('visible');
         const input = razonDiv.querySelector('input');
-        if(input) input.value = ''; // Limpiar la razón si vuelve a marcar que SÍ puede
+        if(input) input.value = '';
     } else {
         razonDiv.classList.add('visible');
     }
@@ -506,24 +506,20 @@ function seleccionarRadio(el){
     if(preg&&preg.condShow){
         const condDiv=document.getElementById(`cond_${id}`);
         if(condDiv){if(val===preg.condShow.showOn){condDiv.classList.add('visible')}else{condDiv.classList.remove('visible');preg.condShow.fields.forEach(cf=>{ 
-            // Limpiar campos ocultos
             if(cf.tipo === 'dias_semana'){
                 estado.respuestas[cf.id] = {};
             } else {
-                estado.respuestas[cf.id]='';
-                const cfEl=document.querySelector(`[data-id="${cf.id}"]`);
-                if(cfEl)cfEl.value='';
+                estado.respuestas[cf.id]='';const cfEl=document.querySelector(`[data-id="${cf.id}"]`);if(cfEl)cfEl.value='';
             }
         })}}
     }
 }
 
-// ACTUALIZADO: Guardar respuestas incluyendo la estructura de los días
+// ACTUALIZADO: Función de guardado adaptada para los días
 function guardarRespuestasPaso(){
     const sec=secciones[estado.paso];
     sec.preguntas.forEach(p=>{
-        if(p.tipo==='radio') return; // Ya se guardó en seleccionarRadio
-        
+        if(p.tipo==='radio') return;
         const el=document.querySelector(`[data-id="${p.id}"]`);
         if(el) estado.respuestas[p.id]=el.value;
         
@@ -532,8 +528,8 @@ function guardarRespuestasPaso(){
                 if(cf.tipo === 'dias_semana'){
                     const diasObj = {};
                     cf.dias.forEach(dia => {
-                        const checkEl = document.querySelector(`.checkbox-card[data-check-id="${cf.id}"][data-dia="${dia}"]`);
-                        const razonEl = document.querySelector(`input[data-razon-id="${cf.id}"][data-dia="${dia}"]`);
+                        const checkEl = document.querySelector(`[data-check-id="${cf.id}"][data-dia="${dia}"]`);
+                        const razonEl = document.querySelector(`[data-razon-id="${cf.id}"][data-dia="${dia}"]`);
                         
                         const isChecked = checkEl ? checkEl.classList.contains('checked') : false;
                         const razon = razonEl ? razonEl.value.trim() : '';
@@ -551,7 +547,21 @@ function guardarRespuestasPaso(){
 }
 
 function pasoAnterior(){if(estado.paso<=0)return;guardarRespuestasPaso();estado.paso--;renderPaso();window.scrollTo({top:0,behavior:'smooth'})}
-function siguientePaso(){guardarRespuestasPaso();const sec=secciones[estado.paso];let alguna=false;sec.preguntas.forEach(p=>{if(estado.respuestas[p.id]&&estado.respuestas[p.id].trim && estado.respuestas[p.id].trim())alguna=true; else if(typeof estado.respuestas[p.id] === 'object') alguna=true;});if(!alguna){toast('Responde al menos una pregunta','warning');return}if(estado.paso<estado.totalPasos-1){estado.paso++;renderPaso();window.scrollTo({top:0,behavior:'smooth'})}else{finalizarEntrevista()}}
+
+// ACTUALIZADO: Validación adaptada para objetos (días)
+function siguientePaso(){
+    guardarRespuestasPaso();
+    const sec=secciones[estado.paso];
+    let alguna=false;
+    sec.preguntas.forEach(p=>{
+        if(estado.respuestas[p.id]){
+            if(typeof estado.respuestas[p.id] === 'string' && estado.respuestas[p.id].trim()) alguna=true;
+            else if(typeof estado.respuestas[p.id] === 'object') alguna=true;
+        }
+    });
+    if(!alguna){toast('Responde al menos una pregunta','warning');return}
+    if(estado.paso<estado.totalPasos-1){estado.paso++;renderPaso();window.scrollTo({top:0,behavior:'smooth'})}else{finalizarEntrevista()}
+}
 
 // ============================================================
 //  FINALIZAR — GUARDAR EN REALTIME DATABASE
@@ -573,7 +583,7 @@ async function finalizarEntrevista(){
     }catch(err){
         console.error('Error:',err);
         await new Promise(r=>setTimeout(r,800));
-        cambiarPPantalla('scrGracias');
+        cambiarPantalla('scrGracias'); // CORREGIDO: Eliminado el typo
         toast('Error al guardar. Intenta de nuevo.','error');
     }
 }
